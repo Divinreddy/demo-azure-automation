@@ -43,11 +43,11 @@ workflow Stop-RunningVMsInSubscription
 	foreach ($vm in $vmsToStop) {
 	
 		#Add Checkpoint so the runbook can be resumed if it stops.  
-		#Checkpoint-Workflow
+		Checkpoint-Workflow
 		#Re-authenticate to Azure after possible workflow resume.
 		Write-Verbose "Connecting to Azure ARM."
-		#ConnectToAzureARM-Workflow
-		#Select-AzureRMSubscription -subscriptionName $subscriptionName
+		ConnectToAzureARM-Workflow
+		Select-AzureRMSubscription -subscriptionName $subscriptionName
 		
 	    if (shouldIgnoreVm($vm.Tags)) {
 			Write-Verbose "VM $($vm.Name) in RG $($vm.ResourceGroupName) was tagged with AlwaysOn=true. It will be ignored."
