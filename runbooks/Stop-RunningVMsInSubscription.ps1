@@ -25,6 +25,7 @@ workflow Stop-RunningVMsInSubscription
 		Select-AzureRMSubscription -subscriptionName $subscriptionName
 	
 	    if ($vm.Tags -ne $null -and $vm.Tags.Contains('AlwaysOn') -and $vm.Tags['AlwaysOn'].ToLower() -eq "true" ) {
+			Write-Verbose "VM $($vm.Name) in RG $($vm.ResourceGroupName) was tagged with AlwaysOn=true. It will be ignored."
 	        $result = New-Object PSCustomObject -Property @{"Name" = $vm.Name; "ResourceGroupName" = $vm.ResourceGroupName; "Status" = "Ignored"}
 	    }
 	    else {
