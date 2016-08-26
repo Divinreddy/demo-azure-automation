@@ -6,6 +6,31 @@ workflow Stop-RunningVMsInSubscription
 	    $subscriptionName	
 	)
 	
+	function shouldIgnoreVm(){
+		param
+		(
+			[Parameter(Mandatory=$false)]
+			[System.Collections.Hashtable[]]$tags
+		)
+		#For some reason the Hashtable is not reacting as expected.
+		if ($tags -eq $null)
+		{
+			return $false
+		}
+
+		$tagList = $tags | ConvertTo-Json | ConvertFrom-Json
+
+		foreach ($tag in $tagList)
+		{
+			if ($tag.Name -eq "AlwaysOn" -and $tag.Value.ToLower() -eq "true")
+			{
+				return $true
+			}
+		}
+
+		return $false
+	}
+	
 	Write-Verbose "Connecting to Azure ARM."
 	ConnectToAzureARM-Workflow 
 	Select-AzureRMSubscription -subscriptionName $subscriptionName
@@ -18,13 +43,13 @@ workflow Stop-RunningVMsInSubscription
 	foreach ($vm in $vmsToStop) {
 	
 		#Add Checkpoint so the runbook can be resumed if it stops.  
-		Checkpoint-Workflow
+		#Checkpoint-Workflow
 		#Re-authenticate to Azure after possible workflow resume.
 		Write-Verbose "Connecting to Azure ARM."
-		ConnectToAzureARM-Workflow
-		Select-AzureRMSubscription -subscriptionName $subscriptionName
-	
-	    if ($vm.Tags -ne $null -and $vm.Tags.Contains('AlwaysOn') -and $vm.Tags['AlwaysOn'].ToLower() -eq "true" ) {
+		#ConnectToAzureARM-Workflow
+		#Select-AzureRMSubscription -subscriptionName $subscriptionName
+		
+	    if (shouldIgnoreVm($vm.Tags)) {
 			Write-Verbose "VM $($vm.Name) in RG $($vm.ResourceGroupName) was tagged with AlwaysOn=true. It will be ignored."
 	        $result = New-Object PSCustomObject -Property @{"Name" = $vm.Name; "ResourceGroupName" = $vm.ResourceGroupName; "Status" = "Ignored"}
 	    }
