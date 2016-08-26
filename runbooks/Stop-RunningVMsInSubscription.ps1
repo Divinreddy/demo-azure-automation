@@ -7,7 +7,7 @@ workflow Stop-RunningVMsInSubscription
 	)
 	
 	Write-Verbose "Connecting to Azure ARM."
-	ConnectoToAzureARM-Workflow 
+	ConnectToAzureARM-Workflow 
 	Select-AzureRMSubscription -subscriptionName $subscriptionName
 	
 	$jobResults =@()
@@ -21,7 +21,7 @@ workflow Stop-RunningVMsInSubscription
 		Checkpoint-Workflow
 		#Re-authenticate to Azure after possible workflow resume.
 		Write-Verbose "Connecting to Azure ARM."
-		ConnectoToAzureARM-Workflow
+		ConnectToAzureARM-Workflow
 		Select-AzureRMSubscription -subscriptionName $subscriptionName
 	
 	    if ($vm.Tags -ne $null -and $vm.Tags.Contains('AlwaysOn') -and $vm.Tags['AlwaysOn'].ToLower() -eq "true" ) {
