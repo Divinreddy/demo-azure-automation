@@ -1,7 +1,7 @@
 Param
 (
     [Parameter (Mandatory= $false)]
-    [string] $uriToTest = "http://azure.com"
+    [string] $uriToTest = "https://azure.microsoft.com"
 )
 #Adapted from: https://gallery.technet.microsoft.com/scriptcenter/Powershell-Script-for-13a551b3
 try{ 
@@ -19,5 +19,6 @@ try{
   catch 
   { 
     Write-Error "Check failed with '$_.Exception'"
+    throw $_.Exception
   }   
   
