@@ -12,23 +12,10 @@ workflow Stop-RunningVMsInSubscription
 			[Parameter(Mandatory=$false)]
 			[System.Collections.Hashtable[]]$tags
 		)
-		#For some reason the Hashtable is not reacting as expected.
-		if ($null -eq $tags)
-		{
-			return $false
-		}
-
-		$tagList = $tags | ConvertTo-Json | ConvertFrom-Json
-
-		foreach ($tag in $tagList)
-		{
-			if ($tag.Name -eq "AlwaysOn" -and $tag.Value.ToLower() -eq "true")
-			{
-				return $true
-			}
-		}
-
-		return $false
+		    if ($null -ne $tags.AlwaysOn -and $tags.AlwaysOn.ToLower() -eq "true"){
+        		return $true;
+    		     }
+		    return $false
 	}
 	
 	Write-Verbose "Connecting to Azure ARM."
