@@ -38,7 +38,7 @@ workflow Stop-RunningVMsInSubscription
 	$jobResults =@()
 
 	#Get all ARM resources from all resource groups
-	$vmsToStop = Find-AzureRMResource -ResourceType 'Microsoft.Compute/virtualMachines'
+	$vmsToStop = Get-AzureRMResource -ResourceType 'Microsoft.Compute/virtualMachines'
 	
 	foreach ($vm in $vmsToStop) {
 	
