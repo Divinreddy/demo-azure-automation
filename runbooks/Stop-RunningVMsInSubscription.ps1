@@ -13,7 +13,7 @@ workflow Stop-RunningVMsInSubscription
 			[System.Collections.Hashtable[]]$tags
 		)
 		#For some reason the Hashtable is not reacting as expected.
-		if ($tags -eq $null)
+		if ($null -e $tags)
 		{
 			return $false
 		}
